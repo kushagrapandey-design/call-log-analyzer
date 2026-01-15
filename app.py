@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import re
-import matplotlib.pyplot as plt
 
 # -----------------------------
 # Page Config
@@ -24,12 +23,10 @@ st.markdown(
             gap: 10px;
             margin-bottom: 10px;
         }
-
         .brand-container img {
             height: 45px;
             cursor: pointer;
         }
-
         .brand-container span {
             font-size: 16px;
             color: white;
@@ -40,7 +37,7 @@ st.markdown(
     <div class="brand-container">
         <a href="https://www.google.com/search?q=%40yourkushagra&rlz=1C1JJTC_enIN1182IN1182&oq=%40y&gs_lcrp=EgZjaHJvbWUqBggCEEUYOzIJCAAQRRg5GIAEMgcIARAAGIAEMgYIAhBFGDsyBggDEEUYQDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABNIBCDM2MzBqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8"
            target="_blank">
-            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUSEhMVFhUXFxcaGBcXGBUYFxcYGBcXFxgWFxgYHSggGBolHRcVITEhJSkrLi4uFx8zODMsNygtLisBCgoKDg0OGhAQGi0fHyUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tNy0tNy0tN//AABEIAOEA4QMBIgACEQEDEQH/..."
+            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUSEhMVFhUXFxcaGBcXGBUYFxcYGBcXFxgWFxgY..."
                  alt="Developer Logo">
         </a>
         <span>Developer</span>
@@ -50,7 +47,6 @@ st.markdown(
 )
 
 st.markdown("---")
-
 st.title("📞 Call Log Analyzer")
 st.write("Paste your call log data below and click **Generate Graph**")
 
@@ -72,7 +68,6 @@ def parse_calls(raw_text):
             r"(\d{2}/\d{2}/\d{4} \d{1,2}:\d{2} [AP]M)",
             line
         )
-
         if not time_match:
             continue
 
@@ -111,50 +106,17 @@ if st.button("Generate Graph") and raw:
         df["hour"] = df["start"].dt.floor("H")
         df["talk_time_min"] = df["duration_sec"] / 60
 
-        # Per-hour aggregation (NOT cumulative)
+        # Hour-wise (NOT cumulative)
         hourly = (
             df.groupby("hour")
             .agg(
-                talk_time=("talk_time_min", "sum"),
-                dials=("start", "count")
+                Talk_Time_Minutes=("talk_time_min", "sum"),
+                Dials=("start", "count")
             )
             .sort_index()
-            .reset_index()
         )
 
-        hourly["hour_label"] = hourly["hour"].dt.strftime("%I:%M %p")
+        hourly.index = hourly.index.strftime("%I:%M %p")
 
-        # -----------------------------
-        # Plot
-        # -----------------------------
-        fig, ax1 = plt.subplots(figsize=(12, 5))
-
-        ax1.plot(
-            hourly["hour_label"],
-            hourly["talk_time"],
-            marker="o",
-            label="Talk Time (min)"
-        )
-
-        ax1.set_xlabel("Hour")
-        ax1.set_ylabel("Talk Time (minutes)")
-        ax1.tick_params(axis="x", rotation=45)
-
-        ax2 = ax1.twinx()
-        ax2.plot(
-            hourly["hour_label"],
-            hourly["dials"],
-            marker="s",
-            linestyle="--",
-            label="Dials"
-        )
-
-        ax2.set_ylabel("Dials")
-
-        # Legends
-        lines_1, labels_1 = ax1.get_legend_handles_labels()
-        lines_2, labels_2 = ax2.get_legend_handles_labels()
-        ax1.legend(lines_1 + lines_2, labels_1 + labels_2, loc="upper left")
-
-        st.subheader("📈 Hour-wise Call Activity")
-        st.pyplot(fig)
+        st.subheader("📈 Hour-wise Call Activity (Per Hour)")
+        st.line_chart(hourly)
