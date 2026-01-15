@@ -12,32 +12,36 @@ st.set_page_config(
 )
 
 # -----------------------------
-# Watermark / Branding (Clickable + Hover Effect)
+# Top-left Branding (Image + Text)
 # -----------------------------
 st.markdown(
     """
     <style>
-        .watermark-link {
-            font-size:36px;
-            font-weight:700;
-            color:#6c757d;
-            letter-spacing:1px;
-            text-decoration:none;
-            transition: color 0.25s ease-in-out;
-            cursor:pointer;
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
-        .watermark-link:hover {
-            color:#0d6efd; /* Blue on hover */
+        .brand-container img {
+            height: 45px;
+            cursor: pointer;
+        }
+
+        .brand-container span {
+            font-size: 16px;
+            color: #444;
+            font-weight: 400;
         }
     </style>
 
-    <div style="text-align:center; margin-bottom:10px;">
-        <a class="watermark-link"
-           href="https://www.google.com/search?sca_esv=7cf98fb56e6d2ae8&rlz=1C1JJTC_enIN1182IN1182&sxsrf=ANbL-n4y8xXIlRn0TCSDZFek9t4FGRUmDQ:1768477853891&udm=2&fbs=ADc_l-aN0CWEZBOHjofHoaMMDiKpaEWjvZ2Py1XXV8d8KvlI3vWUtYx0DZdicpfE1faGYemg2KC4yuMPyQlIvlWqq2At2yMvCZgi_bwXXU0sv2NZz-tCgYlxSPaGehZCZpfMnU52f07FivVkoVuKjAiOZnoDH7-b3NEYW84RQeTfiKGGvc17h44AF_q_EO92No7l3ErSHvOFsqp8n9L5WaetBdzgacck2g&q=%40yourkushagra&sa=X&ved=2ahUKEwjq2ZiyvY2SAxUXRmwGHWi4ECUQtKgLegQIFhAB&biw=1920&bih=945&dpr=1&aic=0"
+    <div class="brand-container">
+        <a href="https://www.google.com/search?q=%40yourkushagra&rlz=1C1JJTC_enIN1182IN1182&oq=%40y&gs_lcrp=EgZjaHJvbWUqBggCEEUYOzIJCAAQRRg5GIAEMgcIARAAGIAEMgYIAhBFGDsyBggDEEUYQDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABNIBCDM2MzBqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8"
            target="_blank">
-            DEVELOPED BY @YOURKUSHAGRA
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLlMGoX0qzb20neGtzCi3eLVFvx3LCsr-sbg&s" alt="Developer Logo">
         </a>
+        <span>Developer</span>
     </div>
     """,
     unsafe_allow_html=True
