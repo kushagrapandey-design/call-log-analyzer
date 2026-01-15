@@ -12,7 +12,7 @@ st.set_page_config(
 )
 
 # -----------------------------
-# Top-left Branding (Image + Text)
+# Top-left Branding (Image + White Text)
 # -----------------------------
 st.markdown(
     """
@@ -31,7 +31,7 @@ st.markdown(
 
         .brand-container span {
             font-size: 16px;
-            color: #444;
+            color: white;          /* WHITE TEXT */
             font-weight: 400;
         }
     </style>
@@ -39,7 +39,8 @@ st.markdown(
     <div class="brand-container">
         <a href="https://www.google.com/search?q=%40yourkushagra&rlz=1C1JJTC_enIN1182IN1182&oq=%40y&gs_lcrp=EgZjaHJvbWUqBggCEEUYOzIJCAAQRRg5GIAEMgcIARAAGIAEMgYIAhBFGDsyBggDEEUYQDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABNIBCDM2MzBqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8"
            target="_blank">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLlMGoX0qzb20neGtzCi3eLVFvx3LCsr-sbg&s" alt="Developer Logo">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLlMGoX0qzb20neGtzCi3eLVFvx3LCsr-sbg&s"
+                 alt="Developer Logo">
         </a>
         <span>Developer</span>
     </div>
