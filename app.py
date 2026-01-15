@@ -12,19 +12,22 @@ st.set_page_config(
 )
 
 # -----------------------------
-# Watermark / Branding
+# Watermark / Branding (Clickable)
 # -----------------------------
 st.markdown(
     """
-    <div style="
-        text-align:center;
-        font-size:36px;
-        font-weight:700;
-        color:#6c757d;
-        letter-spacing:1px;
-        margin-bottom:10px;
-    ">
-        DEVELOPED BY KUSHAGRA PANDEY
+    <div style="text-align:center; margin-bottom:10px;">
+        <a href="https://www.google.com/search?q=%40yourkushagra&rlz=1C1JJTC_enIN1182IN1182&oq=%40yourkushagra&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg7MgYIARBFGEAyBwgCEAAY7wUyBwgDEAAY7wUyBwgEEAAY7wUyBwgFEAAY7wUyBwgGEAAY7wXSAQgzMzY3ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8"
+           target="_blank"
+           style="
+                text-decoration:none;
+                font-size:36px;
+                font-weight:700;
+                color:#6c757d;
+                letter-spacing:1px;
+           ">
+            DEVELOPED BY @YOURKUSHAGRA
+        </a>
     </div>
     """,
     unsafe_allow_html=True
