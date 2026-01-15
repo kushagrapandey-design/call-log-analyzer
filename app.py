@@ -44,15 +44,15 @@ def parse_calls(raw_text):
 
         # Detect duration if present
         dur_match = re.search(r"(\d{2}:\d{2}:\d{2})", line)
-        duration = None
+        duration_sec = 0
 
         if dur_match:
             h, m, s = map(int, dur_match.group(1).split(":"))
-            duration = h * 3600 + m * 60 + s
+            duration_sec = h * 3600 + m * 60 + s
 
         calls.append({
             "start": start,
-            "duration": duration
+            "duration_sec": duration_sec
         })
 
     return calls
@@ -72,14 +72,14 @@ if st.button("Generate Table") and raw:
         # Hour bucket Ω
         df["hour"] = df["start"].dt.floor("H")
 
-        # Talk time (connected calls only)
-        df["talk_time"] = df["duration"].fillna(0)
+        # Convert seconds → minutes
+        df["talk_time_min"] = df["duration_sec"] / 60
 
         # Aggregate per hour
         table = (
             df.groupby("hour")
             .agg(
-                t_i=("talk_time", "sum"),
+                t_i=("talk_time_min", "sum"),
                 d_i=("start", "count")
             )
             .sort_index()
@@ -95,9 +95,9 @@ if st.button("Generate Table") and raw:
 
         # Summary metrics
         total_calls = len(df)
-        connected_calls = df["duration"].notna().sum()
+        connected_calls = (df["duration_sec"] > 0).sum()
         not_connected_calls = total_calls - connected_calls
-        total_talk_time = int(table["t_i"].sum())
+        total_talk_time_min = round(table["t_i"].sum(), 2)
 
         # -----------------------------
         # Display Summary
@@ -109,7 +109,7 @@ if st.button("Generate Table") and raw:
         c1.metric("Total Calls", total_calls)
         c2.metric("Connected Calls", connected_calls)
         c3.metric("Not Connected Calls", not_connected_calls)
-        c4.metric("Total Talk Time (sec)", total_talk_time)
+        c4.metric("Total Talk Time (min)", total_talk_time_min)
 
         st.write(f"**Peak Hour (Ω★):** {peak_hour.strftime('%I:%M %p')}")
 
@@ -119,22 +119,23 @@ if st.button("Generate Table") and raw:
         st.subheader("🕒 Hour-wise Call Table")
 
         display_table = table.copy()
-        display_table["hour"] = display_table["hour"].dt.strftime("%I:%M %p")
 
-        display_table.rename(
-            columns={
-                "hour": "Hour",
-                "t_i": "Talk Time (sec)",
-                "T_i": "Talk Time So Far (sec)",
-                "d_i": "Dials",
-                "D_i": "Dials So Far"
-            },
-            inplace=True
-        )
+        display_table["Hour"] = display_table["hour"].dt.strftime("%I:%M %p")
+        display_table["Talk Time (min)"] = display_table["t_i"].round(2)
+        display_table["Talk Time So Far (min)"] = display_table["T_i"].round(2)
+        display_table["Dials"] = display_table["d_i"]
+        display_table["Dials So Far"] = display_table["D_i"]
+
+        display_table = display_table[
+            [
+                "Hour",
+                "Talk Time (min)",
+                "Talk Time So Far (min)",
+                "Dials",
+                "Dials So Far"
+            ]
+        ]
 
         st.dataframe(display_table, use_container_width=True)
 
-        # -----------------------------
-        # Debug (optional, can remove)
-        # -----------------------------
         st.caption(f"Parsed {len(df)} call records successfully.")
