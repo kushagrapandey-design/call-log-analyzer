@@ -12,20 +12,30 @@ st.set_page_config(
 )
 
 # -----------------------------
-# Watermark / Branding (Clickable)
+# Watermark / Branding (Clickable + Hover Effect)
 # -----------------------------
 st.markdown(
     """
+    <style>
+        .watermark-link {
+            font-size:36px;
+            font-weight:700;
+            color:#6c757d;
+            letter-spacing:1px;
+            text-decoration:none;
+            transition: color 0.25s ease-in-out;
+            cursor:pointer;
+        }
+
+        .watermark-link:hover {
+            color:#0d6efd; /* Blue on hover */
+        }
+    </style>
+
     <div style="text-align:center; margin-bottom:10px;">
-        <a href="https://www.google.com/search?q=%40yourkushagra&rlz=1C1JJTC_enIN1182IN1182&oq=%40yourkushagra&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg7MgYIARBFGEAyBwgCEAAY7wUyBwgDEAAY7wUyBwgEEAAY7wUyBwgFEAAY7wUyBwgGEAAY7wXSAQgzMzY3ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8"
-           target="_blank"
-           style="
-                text-decoration:none;
-                font-size:36px;
-                font-weight:700;
-                color:#6c757d;
-                letter-spacing:1px;
-           ">
+        <a class="watermark-link"
+           href="https://www.google.com/search?sca_esv=7cf98fb56e6d2ae8&rlz=1C1JJTC_enIN1182IN1182&sxsrf=ANbL-n4y8xXIlRn0TCSDZFek9t4FGRUmDQ:1768477853891&udm=2&fbs=ADc_l-aN0CWEZBOHjofHoaMMDiKpaEWjvZ2Py1XXV8d8KvlI3vWUtYx0DZdicpfE1faGYemg2KC4yuMPyQlIvlWqq2At2yMvCZgi_bwXXU0sv2NZz-tCgYlxSPaGehZCZpfMnU52f07FivVkoVuKjAiOZnoDH7-b3NEYW84RQeTfiKGGvc17h44AF_q_EO92No7l3ErSHvOFsqp8n9L5WaetBdzgacck2g&q=%40yourkushagra&sa=X&ved=2ahUKEwjq2ZiyvY2SAxUXRmwGHWi4ECUQtKgLegQIFhAB&biw=1920&bih=945&dpr=1&aic=0"
+           target="_blank">
             DEVELOPED BY @YOURKUSHAGRA
         </a>
     </div>
@@ -52,7 +62,6 @@ def parse_calls(raw_text):
     for line in raw_text.splitlines():
         line = line.strip()
 
-        # Detect datetime
         time_match = re.search(
             r"(\d{2}/\d{2}/\d{4} \d{1,2}:\d{2} [AP]M)",
             line
@@ -66,7 +75,6 @@ def parse_calls(raw_text):
             "%m/%d/%Y %I:%M %p"
         )
 
-        # Detect duration if present
         dur_match = re.search(r"(\d{2}:\d{2}:\d{2})", line)
         duration_sec = 0
 
@@ -143,7 +151,6 @@ if st.button("Generate Table") and raw:
         st.subheader("🕒 Hour-wise Call Table")
 
         display_table = table.copy()
-
         display_table["Hour"] = display_table["hour"].dt.strftime("%I:%M %p")
         display_table["Talk Time (min)"] = display_table["t_i"].round(2)
         display_table["Talk Time So Far (min)"] = display_table["T_i"].round(2)
